@@ -29,7 +29,12 @@ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip
 
 VALIDATE $? "Downloaded AWS CLI V2"
 
-unzip awscliv2.zip &>> $LOG
+if [ -d "aws" ]; then
+    echo "AWS directory already exists...$Y SKIPPING Unzip $N"
+else
+    unzip awscliv2.zip &>> $LOG
+    VALIDATE "unzip AWS CLI V2"
+fi
 
 VALIDATE $? "Unzip AWS CLI V2"
 
