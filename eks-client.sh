@@ -39,3 +39,10 @@ fi
 ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update &>> $LOG
 
 VALIDATE $? "Updated AWS CLI V2"
+
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+VALIDATE $? "Downloaded eksctl command"
+chmod +x /tmp/eksctl
+VALIDATE $?  "Added execute permissions to eksctl"
+mv /tmp/eksctl /usr/local/bin
+VALIDATE $? "Added execute permissions to eksctl"
