@@ -54,3 +54,12 @@ VALIDATE $?  "Added execute permissions to kubectl"
 mv kubectl /usr/local/bin/kubectl
 VALIDATE $?  "moved kubectl to bin folder"
 
+echo "Enter Your AWS Access key: "
+read ACCESS_KEY
+
+echo "Enter Your AWS Secret key: "
+read SECRET_KEY
+
+aws configure set aws_access_key_id $ACCESS_KEY
+aws configure set aws_secret_access_key $SECRET_KEY
+aws configure set default.region ap-south-1
