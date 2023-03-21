@@ -28,13 +28,13 @@ VALIDATE(){
 echo "Enter Your AWS Access key: "
 read -s ACCESS_KEY
 echo $ACCESS_KEY
-su -l ec2-user -C "aws configure set aws_access_key_id $ACCESS_KEY"
+su -l ec2-user -c "aws configure set aws_access_key_id $ACCESS_KEY"
 
 echo "Enter Your AWS Secret key: "
 read -s SECRET_KEY
 
-su -l ec2-user -C "aws configure set aws_secret_access_key $SECRET_KEY"
-su -l ec2-user -C "aws configure set default.region ap-south-1"
+su -l ec2-user -c "aws configure set aws_secret_access_key $SECRET_KEY"
+su -l ec2-user -c "aws configure set default.region ap-south-1"
 
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" &>> $LOG
 
