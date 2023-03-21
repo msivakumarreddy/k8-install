@@ -45,4 +45,11 @@ VALIDATE $? "Downloaded eksctl command"
 chmod +x /tmp/eksctl
 VALIDATE $?  "Added execute permissions to eksctl"
 mv /tmp/eksctl /usr/local/bin
-VALIDATE $? "Added execute permissions to eksctl"
+VALIDATE $? "moved eksctl to bin folder"
+
+curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.24.10/2023-01-30/bin/linux/amd64/kubectl
+VALIDATE $? "Downloaded kubectl 1.24 version"
+chmod +x kubectl
+VALIDATE $?  "Added execute permissions to kubectl"
+mv kubectl /usr/local/bin/kubectl
+VALIDATE $?  "moved kubectl to bin folder"
