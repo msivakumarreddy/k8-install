@@ -31,7 +31,6 @@ read -s ACCESS_KEY
 echo "Enter Your AWS Secret key: "
 read -s SECRET_KEY
 
-echo "Enter Your AWS Region: "
 read -p "Enter Your AWS Region: " REGION
 REGION=${REGION:-ap-south-1}
 
