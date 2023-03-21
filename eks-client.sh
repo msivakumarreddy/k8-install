@@ -26,10 +26,10 @@ VALIDATE(){
 }
 
 echo "Enter Your AWS Access key: "
-read ACCESS_KEY
+read -s ACCESS_KEY
 
 echo "Enter Your AWS Secret key: "
-read SECRET_KEY
+read -s SECRET_KEY
 
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" &>> $LOG
 
