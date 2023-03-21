@@ -5,7 +5,7 @@ G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
 pwd
-mkdir eks-client-install
+mkdir -p eks-client-install
 cd eks-client-install
 pwd
 LOG=eks-client-install.log
