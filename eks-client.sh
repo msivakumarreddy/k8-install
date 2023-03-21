@@ -53,3 +53,4 @@ chmod +x kubectl
 VALIDATE $?  "Added execute permissions to kubectl"
 mv kubectl /usr/local/bin/kubectl
 VALIDATE $?  "moved kubectl to bin folder"
+
