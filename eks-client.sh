@@ -27,15 +27,23 @@ VALIDATE(){
 
 echo "Enter Your AWS Access key: "
 read -s ACCESS_KEY
-su -l ec2-user -c "aws configure set aws_access_key_id $ACCESS_KEY"
 
 echo "Enter Your AWS Secret key: "
 read -s SECRET_KEY
-su -l ec2-user -c "aws configure set aws_secret_access_key $SECRET_KEY"
 
 echo "Enter Your AWS Region: "
 read -p "Enter Your AWS Region: " REGION
 REGION=${REGION:-ap-south-1}
+
+echo "Enter your key pair name: "
+read KEY_PAIR
+
+echo "Enter your cluster name: "
+read CLUSTER_NAME
+
+
+su -l ec2-user -c "aws configure set aws_access_key_id $ACCESS_KEY"
+su -l ec2-user -c "aws configure set aws_secret_access_key $SECRET_KEY"
 su -l ec2-user -c "aws configure set default.region $REGION"
 
 curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" &>> $LOG
@@ -67,14 +75,13 @@ VALIDATE $?  "Added execute permissions to kubectl"
 mv kubectl /usr/local/bin/kubectl &>> $LOG
 VALIDATE $?  "moved kubectl to bin folder"
 
-echo "Enter your key pair name: "
-read KEY_PAIR
+
 yaml='---
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: spot-cluster1
+  name: "$CLUSTER_NAME"
   region: "$REGION"
 
 managedNodeGroups:
@@ -85,4 +92,5 @@ managedNodeGroups:
   ssh:
     publicKeyName: "${KEY_PAIR}"
 '
-echo "$yaml" | envsubst | eksctl create cluster --cluster-file=
+cat $yaml > eksctl-config.yaml
+eksctl create cluster --config-file=eksctl-config.yaml
