@@ -25,27 +25,7 @@ VALIDATE(){
 
 }
 
-echo "Enter Your AWS Access key: "
-read -s ACCESS_KEY
-
-echo "Enter Your AWS Secret key: "
-read -s SECRET_KEY
-
-read -p "Enter Your AWS Region: " REGION
-REGION=${REGION:-ap-south-1}
-
-echo "Enter your key pair name: "
-read KEY_PAIR
-
-echo "Enter your cluster name: "
-read CLUSTER_NAME
-
-
-su -l ec2-user -c "aws configure set aws_access_key_id $ACCESS_KEY"
-su -l ec2-user -c "aws configure set aws_secret_access_key $SECRET_KEY"
-su -l ec2-user -c "aws configure set default.region $REGION"
-
-curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" &>> $LOG
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" &>> $LOG
 
 VALIDATE $? "Downloaded AWS CLI V2"
 
@@ -60,36 +40,16 @@ fi
 
 VALIDATE $? "Updated AWS CLI V2"
 
-curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp &>> $LOG
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
 VALIDATE $? "Downloaded eksctl command"
-chmod +x /tmp/eksctl &>> $LOG
+chmod +x /tmp/eksctl
 VALIDATE $?  "Added execute permissions to eksctl"
-mv /tmp/eksctl /usr/local/bin &>> $LOG
+mv /tmp/eksctl /usr/local/bin
 VALIDATE $? "moved eksctl to bin folder"
 
-curl -s -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.24.10/2023-01-30/bin/linux/amd64/kubectl &>> $LOG
+curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.24.10/2023-01-30/bin/linux/amd64/kubectl
 VALIDATE $? "Downloaded kubectl 1.24 version"
-chmod +x kubectl &>> $LOG
+chmod +x kubectl
 VALIDATE $?  "Added execute permissions to kubectl"
-mv kubectl /usr/local/bin/kubectl &>> $LOG
+mv kubectl /usr/local/bin/kubectl
 VALIDATE $?  "moved kubectl to bin folder"
-
-
-yaml='---
-apiVersion: eksctl.io/v1alpha5
-kind: ClusterConfig
-
-metadata:
-  name: "$CLUSTER_NAME"
-  region: "$REGION"
-
-managedNodeGroups:
-
-# `instanceTypes` defaults to [`m5.large`]
-- name: spot-1
-  spot: true
-  ssh:
-    publicKeyName: "${KEY_PAIR}"
-'
-echo $yaml > eksctl-config.yaml
-eksctl create cluster --config-file=eksctl-config.yaml
