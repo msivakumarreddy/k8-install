@@ -25,14 +25,14 @@ VALIDATE(){
 
 }
 
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" &>> $LOG
 
 VALIDATE $? "Downloaded AWS CLI V2"
 
-unzip awscliv2.zip
+unzip awscliv2.zip &>> $LOG
 
 VALIDATE $? "Unzip AWS CLI V2"
 
-./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
+./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update &>> $LOG
 
 VALIDATE $? "Updated AWS CLI V2"
