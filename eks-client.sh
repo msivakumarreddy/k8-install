@@ -27,6 +27,7 @@ VALIDATE(){
 
 echo "Enter Your AWS Access key: "
 read -s ACCESS_KEY
+echo $ACCESS_KEY
 aws configure set aws_access_key_id $ACCESS_KEY
 
 echo "Enter Your AWS Secret key: "
