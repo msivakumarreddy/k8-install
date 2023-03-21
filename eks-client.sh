@@ -25,6 +25,12 @@ VALIDATE(){
 
 }
 
+echo "Enter Your AWS Access key: "
+read ACCESS_KEY
+
+echo "Enter Your AWS Secret key: "
+read SECRET_KEY
+
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" &>> $LOG
 
 VALIDATE $? "Downloaded AWS CLI V2"
@@ -54,11 +60,7 @@ VALIDATE $?  "Added execute permissions to kubectl"
 mv kubectl /usr/local/bin/kubectl
 VALIDATE $?  "moved kubectl to bin folder"
 
-echo "Enter Your AWS Access key: "
-read ACCESS_KEY
 
-echo "Enter Your AWS Secret key: "
-read SECRET_KEY
 
 aws configure set aws_access_key_id $ACCESS_KEY
 aws configure set aws_secret_access_key $SECRET_KEY
