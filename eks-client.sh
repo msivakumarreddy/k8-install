@@ -4,10 +4,10 @@ R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
-pwd
+
 mkdir -p eks-client-install
 cd eks-client-install
-pwd
+
 LOG=eks-client-install.log
 USER_ID=$(id -u)
 if [ $USER_ID -ne 0 ]; then
@@ -27,16 +27,18 @@ VALIDATE(){
 
 echo "Enter Your AWS Access key: "
 read -s ACCESS_KEY
-echo $ACCESS_KEY
 su -l ec2-user -c "aws configure set aws_access_key_id $ACCESS_KEY"
 
 echo "Enter Your AWS Secret key: "
 read -s SECRET_KEY
-
 su -l ec2-user -c "aws configure set aws_secret_access_key $SECRET_KEY"
-su -l ec2-user -c "aws configure set default.region ap-south-1"
 
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" &>> $LOG
+echo "Enter Your AWS Region: "
+read -p "Enter Your AWS Region: " REGION
+REGION=${REGION:-ap-south-1}
+su -l ec2-user -c "aws configure set default.region $REGION"
+
+curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" &>> $LOG
 
 VALIDATE $? "Downloaded AWS CLI V2"
 
@@ -51,17 +53,17 @@ fi
 
 VALIDATE $? "Updated AWS CLI V2"
 
-curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp &>> $LOG
 VALIDATE $? "Downloaded eksctl command"
-chmod +x /tmp/eksctl
+chmod +x /tmp/eksctl &>> $LOG
 VALIDATE $?  "Added execute permissions to eksctl"
-mv /tmp/eksctl /usr/local/bin
+mv /tmp/eksctl /usr/local/bin &>> $LOG
 VALIDATE $? "moved eksctl to bin folder"
 
-curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.24.10/2023-01-30/bin/linux/amd64/kubectl
+curl -s -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.24.10/2023-01-30/bin/linux/amd64/kubectl &>> $LOG
 VALIDATE $? "Downloaded kubectl 1.24 version"
-chmod +x kubectl
+chmod +x kubectl &>> $LOG
 VALIDATE $?  "Added execute permissions to kubectl"
-mv kubectl /usr/local/bin/kubectl
+mv kubectl /usr/local/bin/kubectl &>> $LOG
 VALIDATE $?  "moved kubectl to bin folder"
 
