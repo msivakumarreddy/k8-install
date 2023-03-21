@@ -91,5 +91,5 @@ managedNodeGroups:
   ssh:
     publicKeyName: "${KEY_PAIR}"
 '
-cat $yaml > eksctl-config.yaml
+echo $yaml > eksctl-config.yaml
 eksctl create cluster --config-file=eksctl-config.yaml
