@@ -67,3 +67,22 @@ VALIDATE $?  "Added execute permissions to kubectl"
 mv kubectl /usr/local/bin/kubectl &>> $LOG
 VALIDATE $?  "moved kubectl to bin folder"
 
+echo "Enter your key pair name: "
+read KEY_PAIR
+yaml='---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: spot-cluster1
+  region: "$REGION"
+
+managedNodeGroups:
+
+# `instanceTypes` defaults to [`m5.large`]
+- name: spot-1
+  spot: true
+  ssh:
+    publicKeyName: "${KEY_PAIR}"
+'
+echo "$yaml" | envsubst | eksctl create cluster --cluster-file=
